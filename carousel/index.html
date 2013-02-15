@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="style.css" rel="stylesheet">
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.3/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="carousel.js"></script>
+
+<meta name="description" content="Carousel Styling" />
+<meta charset=utf-8 />
+<title>Carousel</title>
+
+</head>
+  
+<!-- DIRECTIVE TEMPLATE -->
+<body ng-app="myApp">
+  
+  <script type="text/ng-template" id="Carousel.html">
+      
+    <div class="carousel">
+      
+      <!-- prev/next -->
+      <nav>
+      <div class="half-circle--right carousel-prev"></div>
+      <div class="half-circle--left carousel-next"></div>
+      </nav>
+      
+      <div class="slide">
+        
+        <ul class="tiles">
+          <!-- results -->
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+        </ul>
+  
+        <ul class="dots">
+          <li class='active'></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+    
+    </div><!-- /mask -->
+  </div><!-- /carousel -->
+   
+</script>
+
+<div class="container">
+  <!-- ADD DIRECTIVE TO PAGE -->  
+  <carousel></carousel>
+</div>
+  
+ 
+</body>
+</html>

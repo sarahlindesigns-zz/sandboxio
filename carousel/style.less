@@ -1,0 +1,157 @@
+/* Reset
+   -------------------------- */
+body {
+  margin: 0;
+}
+
+.container {
+  width: 80%;
+  padding: 20px;
+  margin: 0 auto;
+  background: rgba(210,210,200,.2);
+}
+
+/* Variables
+   -------------------------- */
+@tile-med-desktop: 187px;
+@tile-sml-desktop: 89px;
+@tile-mobile: 145px;
+@tile-mobile-retina: 290px;
+
+@tile-size: 0px + @tile-med-desktop;
+
+@tile-height: 0px + @tile-size;
+@tile-width: 0px + round(@tile-height*3/4); /*4x3 aspect ration*/
+
+@rad: 93px;
+@indent: @tile-width*3;
+
+.carousel {
+  position: relative;
+  /*parent acts as a mask for the carousel*/
+  margin: 0;
+  padding: 0;
+  width: 100%; 
+  height: @tile-height; 
+  overflow:hidden;
+  
+  &.show-next-ui {
+    .half-circle--left {
+      display: block;
+    }
+  }
+  &.show-prev-ui {
+    .half-circle--right {
+      display: block;
+    }
+  }
+  
+  &.first-set {
+   margin-left: @indent; 
+  }
+  
+  .slide {
+    background: orange;
+    width: 200%; /*extend beyond page to the right*/
+    
+  }
+  
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  ul.tiles:first-child {
+    margin-left: @indent;
+  }
+  
+  ul.tiles {
+  
+    li.tile {
+      width:  @tile-width;
+      height: @tile-height;
+      float: left;
+      margin: 0;
+      margin-right: @tile-width/4;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+  }
+  
+  .prev, .next {
+    cursor: pointer;
+  }
+  
+  .half-circle--left {
+    display: none;
+    position: absolute;
+    right: -@rad/2; /*clip left*/
+    .half-circle(@rad, 0);
+    background: rgba(176, 60, 172, .75);
+  
+    /*ARROW ICON HERE*/
+  }
+
+  .half-circle--right{
+    display: none;
+    position: absolute;
+    left: -@rad/2; /*clip right*/
+    .half-circle(@rad, 1);
+    background: rgba(176, 60, 172, .75);
+    
+    /*ARROW ICON HERE*/
+  }
+  
+}
+
+
+/* Circle Mixins
+   -------------------------- */
+
+/**
+ *
+ * Circle
+ *
+ * @exports {class} .circle();
+ *
+ * @param {unit} - sets diameter of circle
+ *
+ */
+
+.circle(@diameter:auto) {
+  width  : @diameter;
+  height : @diameter;
+  border-radius: 50%           ;
+}
+
+ /**
+ *
+ * Half-Circle
+ *
+ * @exports {class} .half-circle();
+ *
+ * @param {String} 'left'|'right'
+ *
+ */
+
+
+//facing left
+.half-circle (@radius, @direction) when (@direction = 0) {
+  height: (@radius*2);
+  width: @radius;
+  border-radius: @radius 0 0 @radius;
+}
+
+//facing right
+.half-circle (@radius, @direction) when (@direction = 1) {
+  height: (@radius*2);
+  width: @radius;
+  border-radius: 0 @radius @radius 0;
+}

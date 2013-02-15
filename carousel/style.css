@@ -1,0 +1,111 @@
+/* Reset
+   -------------------------- */
+body {
+  margin: 0;
+}
+.container {
+  width: 80%;
+  padding: 20px;
+  margin: 0 auto;
+  background: rgba(210, 210, 200, 0.2);
+}
+/* Variables
+   -------------------------- */
+/*4x3 aspect ration*/
+.carousel {
+  position: relative;
+  /*parent acts as a mask for the carousel*/
+
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 187px;
+  overflow: hidden;
+}
+.carousel.show-next-ui .half-circle--left {
+  display: block;
+}
+.carousel.show-prev-ui .half-circle--right {
+  display: block;
+}
+.carousel.first-set {
+  margin-left: 420px;
+}
+.carousel .slide {
+  background: orange;
+  width: 200%;
+  /*extend beyond page to the right*/
+
+}
+.carousel ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.carousel li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.carousel ul.tiles:first-child {
+  margin-left: 420px;
+}
+.carousel ul.tiles li.tile {
+  width: 140px;
+  height: 187px;
+  float: left;
+  margin: 0;
+  margin-right: 35px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.carousel .prev,
+.carousel .next {
+  cursor: pointer;
+}
+.carousel .half-circle--left {
+  display: none;
+  position: absolute;
+  right: -46.5px;
+  /*clip left*/
+
+  height: 186px;
+  width: 93px;
+  border-radius: 93px 0 0 93px;
+  background: rgba(176, 60, 172, 0.75);
+  /*ARROW ICON HERE*/
+
+}
+.carousel .half-circle--right {
+  display: none;
+  position: absolute;
+  left: -46.5px;
+  /*clip right*/
+
+  height: 186px;
+  width: 93px;
+  border-radius: 0 93px 93px 0;
+  background: rgba(176, 60, 172, 0.75);
+  /*ARROW ICON HERE*/
+
+}
+/* Circle Mixins
+   -------------------------- */
+/**
+ *
+ * Circle
+ *
+ * @exports {class} .circle();
+ *
+ * @param {unit} - sets diameter of circle
+ *
+ */
+/**
+ *
+ * Half-Circle
+ *
+ * @exports {class} .half-circle();
+ *
+ * @param {String} 'left'|'right'
+ *
+ */
