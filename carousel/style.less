@@ -34,14 +34,15 @@ body {
   width: 100%; 
   height: @tile-height; 
   overflow:hidden;
+  background: blue;
   
   &.show-next-ui {
-    .half-circle--left {
+    .carousel-next {
       display: block;
     }
   }
   &.show-prev-ui {
-    .half-circle--right {
+    .carousel-prev {
       display: block;
     }
   }
@@ -85,7 +86,7 @@ body {
     }
   }
   
-  .prev, .next {
+  .carousel-prev, .carousel-next {
     cursor: pointer;
   }
   

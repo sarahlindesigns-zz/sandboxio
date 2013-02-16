@@ -21,11 +21,12 @@ body {
   width: 100%;
   height: 187px;
   overflow: hidden;
+  background: blue;
 }
-.carousel.show-next-ui .half-circle--left {
+.carousel.show-next-ui .carousel-next {
   display: block;
 }
-.carousel.show-prev-ui .half-circle--right {
+.carousel.show-prev-ui .carousel-prev {
   display: block;
 }
 .carousel.first-set {
@@ -59,8 +60,8 @@ body {
   margin-right: 10px;
   cursor: pointer;
 }
-.carousel .prev,
-.carousel .next {
+.carousel .carousel-prev,
+.carousel .carousel-next {
   cursor: pointer;
 }
 .carousel .half-circle--left {
