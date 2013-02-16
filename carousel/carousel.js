@@ -11,7 +11,7 @@ directive('carousel', function() { return {
   controller  :   'CarouselCtrl',
   templateUrl :   'Carousel.html',
 
-  link: function(scope, elem, attrs, ctrl) {
+  link: function postLink(scope, elem, attrs, ctrl) {
 
     /**
       *
@@ -27,11 +27,27 @@ directive('carousel', function() { return {
     var nxtBtn   = $(elem).find('.carousel-next');
     var prvBtn   = $(elem).find('.carousel-prev');
 
+    //XXX - for debugging positioning
+    var m1 = $('.m1');
+    var m2 = $('.m2');
+    var m3 = $('.m3');
+
+
     //measurements
-    var carouselWidth  = carousel.width();
-    var tileWidth      = tiles.width();
-    var tileOffset     = tiles.outerWidth();
-    var elementsPerRow = carouselWidth/tileOffset;
+    var carouselWidth    = carousel.width();
+    var tileWidth        = tiles.width();
+    var tileOffset       = tiles.outerWidth();
+    var elementsPerRow   = carouselWidth/tileOffset;
+    var elementsPerFirst = carouselWidth;
+    //var firstSetIndent   = $(elem).find('.carousel');
+    
+    var left = tiles.first().offset().left;
+    var cLeft = carousel.offset().left;
+    var pos = left + cLeft;
+
+    m1.css('left', left);
+    m2.css('left', cLeft);
+    m3.css('left', pos);
 
     //flags
     var showingFirstSet = true;
@@ -94,7 +110,14 @@ directive('carousel', function() { return {
 
     }
 
-    self.addEventHandlers();   
+
+
+    self.addEventHandlers();
+
+    var rightEdge = carousel.offset().left + carouselWidth;
+
+    //marker.css('left', rightEdge);
+    
   }
 };}).
 

@@ -11,7 +11,33 @@ body {
 }
 /* Variables
    -------------------------- */
-/*4x3 aspect ration*/
+.m1 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%           ;
+  background: limegreen;
+}
+.m2 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%           ;
+  background: red;
+}
+.m3 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%           ;
+  background: orange;
+}
 .carousel {
   position: relative;
   /*parent acts as a mask for the carousel*/
@@ -48,10 +74,7 @@ body {
   margin: 0;
   padding: 0;
 }
-.carousel ul.tiles:first-child {
-  margin-left: 420px;
-}
-.carousel ul.tiles li.tile {
+.carousel .tiles > .tile {
   width: 140px;
   height: 187px;
   float: left;
@@ -59,6 +82,9 @@ body {
   margin-right: 35px;
   margin-right: 10px;
   cursor: pointer;
+}
+.carousel .tiles__indent > .tile:first-child {
+  margin-left: 420px;
 }
 .carousel .carousel-prev,
 .carousel .carousel-next {

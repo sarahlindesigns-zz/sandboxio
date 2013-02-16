@@ -21,10 +21,34 @@ body {
 @tile-size: 0px + @tile-med-desktop;
 
 @tile-height: 0px + @tile-size;
-@tile-width: 0px + round(@tile-height*3/4); /*4x3 aspect ration*/
+@tile-width: 0px + round(@tile-height*3/4);
 
 @rad: 93px;
 @indent: @tile-width*3;
+
+
+.m1 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  .circle(10px);
+  background: limegreen;
+}
+.m2 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  .circle(10px);
+  background: red;
+}
+.m3 {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  .circle(10px);
+  background: orange;
+}
+
 
 .carousel {
   position: relative;
@@ -68,22 +92,18 @@ body {
     margin: 0;
     padding: 0;
   }
-
-  ul.tiles:first-child {
-    margin-left: @indent;
+  
+  .tiles > .tile {
+    width:  @tile-width;
+    height: @tile-height;
+    float: left;
+    margin: 0;
+    margin-right: @tile-width/4;
+    margin-right: 10px;
+    cursor: pointer;
   }
-  
-  ul.tiles {
-  
-    li.tile {
-      width:  @tile-width;
-      height: @tile-height;
-      float: left;
-      margin: 0;
-      margin-right: @tile-width/4;
-      margin-right: 10px;
-      cursor: pointer;
-    }
+  .tiles__indent > .tile:first-child {
+    margin-left: @indent;
   }
   
   .carousel-prev, .carousel-next {
