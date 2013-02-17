@@ -20,19 +20,19 @@
 
     <script src="../js/vendor/angular.min.js"></script>
     <script src="../js/vendor/jquery.js"></script>
-     <script src="carousel.js"></script>
+    <script src="carousel.js"></script>
   </head>
 
   <body ng-app="myApp">
 
-  <div class="m1"></div>
-  <div class="m2"></div>
-  <div class="m3"></div>
-  <div class="m4"></div>
+  <div class="marker m1"></div>
+  <div class="marker m2"></div>
+  <div class="marker m3"></div>
+  <div class="marker m4"></div>
 
    <script type="text/ng-template" id="Carousel.html">
       
-    <div class="carousel">
+    <div class="carousel container">
       
       <!-- prev/next -->
       <div class="half-circle--right carousel-prev"></div>
@@ -41,37 +41,97 @@
       <div class="slide">
         
         <ul class="tiles tiles__indent">
-        <!-- results -->
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
-        <li class="tile">
-        <img src="http://placehold.it/140x187">
-        </li>
+          <!-- results -->
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile" id="found it">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile" id="found it">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile" id="found it">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
+          <li class="tile">
+          <img src="http://placehold.it/140x187">
+          </li>
         </ul>
   
         <ul class="dots">
@@ -89,7 +149,7 @@
     </script>
 
 
-    <div class="container">
+    <div class="wrapper">
       <!-- ADD DIRECTIVE TO PAGE -->  
       <carousel></carousel>
     </div>

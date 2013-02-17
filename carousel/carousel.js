@@ -32,30 +32,31 @@ directive('carousel', function() { return {
     var m2 = $('.m2');
     var m3 = $('.m3');
 
-
     //measurements
     var carouselWidth    = carousel.width();
     var tileWidth        = tiles.width();
-    var tileOffset       = tiles.outerWidth();
+    var tileOffset       = $('li.tile').last().outerWidth(true);
+    var tileMargin       = tileOffset - tileWidth;
     var elementsPerRow   = carouselWidth/tileOffset;
     var elementsPerFirst = carouselWidth;
-    //var firstSetIndent   = $(elem).find('.carousel');
-    
-    var left = tiles.first().offset().left;
-    var cLeft = carousel.offset().left;
-    var pos = left + cLeft;
-
-    m1.css('left', left);
-    m2.css('left', cLeft);
-    m3.css('left', pos);
+    var resizeTimeout;
+  
+    //m2.css('left', cLeft);
+    //m3.css('left', pos);
 
     //flags
     var showingFirstSet = true;
+    var adjusting = false;
 
     self.addEventHandlers = function() {
   
       $(window).resize(function() {
-        //updateElement PerRow();
+       /* if(resizeTimeout) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function(){
+          refresh();
+          tiles.css('margin-right', naturalMargin);
+          adjustIndent();
+        }, 200);*/
       });
 
       $(elem).mouseover(function() {
@@ -67,7 +68,6 @@ directive('carousel', function() { return {
       });
 
       prvBtn.click(function() {
-        console.log("load prev");
         if(ctrl.getPageNo())
         ctrl.getPrev();
         showingFirstSet = (ctrl.getPageNo() < 2);
@@ -75,26 +75,32 @@ directive('carousel', function() { return {
       });
 
       nxtBtn.click(function() {
-        console.log("load next");
         ctrl.getNext();
         showingFirstSet = (ctrl.getPageNo() < 2);
         showUI();
       });
     };
 
-    //helper functions
-    function getDisplayWidth() {
-      //return carouselWidth
-    }
+    /**
+      *
+      * DOM Manipulation Helpers
+      *
+      */
+
+    //TODO: try to minimize this and refactor
+
+
 
     function showUI() {
       if(!ctrl.isMobile()) {
         if(showingFirstSet) {
-         carousel.removeClass('show-prev-ui');
-         carousel.addClass('show-next-ui');
+          carousel.addClass('container'); //throw into tbs layout
+          carousel.removeClass('show-prev-ui');
+          carousel.addClass('show-next-ui');
         } else {
-         carousel.addClass('show-prev-ui');
-         carousel.addClass('show-next-ui');
+          carousel.removeClass('container'); //pull out of tbs container layout - full width
+          carousel.addClass('show-prev-ui');
+          carousel.addClass('show-next-ui');
         }  
       }
     }
@@ -106,11 +112,51 @@ directive('carousel', function() { return {
       }
     }
 
-    function adjustIndent() { //adjust left offset on first row of results
+    function numberTilesToShow() {
+      var screenWidth  = $(window).width();
+      var marginOffset = naturalMargin;
 
+      //return screenWidth / tileOffset;
+    }
+
+    function adjust() {
+      
     }
 
 
+    /*function adjustIndent() { //adjust left offset on first row of results
+      //calculate carousel display area width and get last visible tile
+      var carourselOffset = carousel.offset().left;
+      var indentWidth     = tiles.first().offset().left - carourselOffset;
+      var displayWidth    = carouselWidth - indentWidth; //remaining display room past indent
+      var tilesVisible    = Math.round(displayWidth / tileOffset);
+      var lastTileIx      = tilesVisible - 1;
+      var lastTile        = tiles[lastTileIx];
+      var marginPadding   = 0;
+
+      //positioning vars
+      var lastTileOffset  = $(lastTile).width()/2;
+      var lastTileXCoord  = $(lastTile).offset().left;
+      console.log(lastTileXCoord);
+      var carouselEnd     = carouselWidth + carourselOffset;
+
+      m3.css('left', carouselEnd); //orange
+
+      if(!adjusting) {  
+        while((lastTileXCoord + lastTileOffset + marginPadding) < carouselEnd) {
+          var margin = Math.round((naturalMargin + marginPadding) / tilesVisible);
+
+          adjusting = true;
+          marginPadding++;
+          tiles.css('margin-right', margin);
+        }
+      }
+      adjusting = false;
+    }*/
+
+    function refresh() {
+      carouselWidth = carousel.width();
+    }
 
     self.addEventHandlers();
 

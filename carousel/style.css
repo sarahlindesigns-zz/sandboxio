@@ -3,14 +3,16 @@
 body {
   margin: 0;
 }
-.container {
-  padding: 20px;
+.wrapper {
   margin: 0 auto;
   margin-top: 100px;
   background: rgba(210, 210, 200, 0.2);
 }
 /* Variables
    -------------------------- */
+.marker {
+  display: none;
+}
 .m1 {
   position: absolute;
   z-index: 9;
@@ -49,14 +51,15 @@ body {
   overflow: hidden;
   background: blue;
 }
+.carousel.container {
+  margin-right: 0;
+  padding: 0;
+}
 .carousel.show-next-ui .carousel-next {
   display: block;
 }
 .carousel.show-prev-ui .carousel-prev {
   display: block;
-}
-.carousel.first-set {
-  margin-left: 420px;
 }
 .carousel .slide {
   background: orange;
@@ -82,9 +85,10 @@ body {
   margin-right: 35px;
   margin-right: 10px;
   cursor: pointer;
+  background: black;
 }
-.carousel .tiles__indent > .tile:first-child {
-  margin-left: 420px;
+.carousel .tile img {
+  display: none;
 }
 .carousel .carousel-prev,
 .carousel .carousel-next {
