@@ -52,6 +52,10 @@ body {
   overflow: hidden;
   background: blue;
   margin: auto;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }
 .carousel.container {
   margin-right: 0;
@@ -68,6 +72,10 @@ body {
   background: orange;
   width: 1000%;
   /*extend beyond page to the right*/
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }
 .carousel ul {
   margin: 0;

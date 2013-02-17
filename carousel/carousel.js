@@ -36,6 +36,7 @@ directive('carousel', function() { return {
     var tileWidth   = tiles.width();
     var tileOffset  = $('li.tile').last().outerWidth(true);
     var tileMargin  = tileOffset - tileWidth;
+    var slideSpeed  = 500;
 
     //flags
     var currentViewSet    = ctrl.getSetNo();
@@ -83,14 +84,20 @@ directive('carousel', function() { return {
 
     function slideTo(dir, callback) {
       var position = (dir === 'next') ? getNextPosition(): getPrevPosition();
-      console.log(position);
+
+      $('.slide').css('left', position); //uses pure css for animation
+      if(typeof callback === 'function') {
+        callback();
+      }
+      /*
       $('.slide').animate({
         left: position
-      }, 100, function() {
+      }, slideSpeed, function() {
         if(typeof callback === 'function') {
           callback();
         }
       });
+      */
     }
 
     function showUI() {
@@ -138,12 +145,10 @@ directive('carousel', function() { return {
     }
 
     function getNextPosition() {
-      console.log('get next position');
       return (isFirstSet()) ? getViewWidth() * -1: $('.slide').offset().left + (getViewWidth() * -1);
     }
 
     function getPrevPosition() {
-      console.log('get previous position');
       return (isFirstSet()) ? 0 : $('.slide').offset().left + getViewWidth();
     }
 
