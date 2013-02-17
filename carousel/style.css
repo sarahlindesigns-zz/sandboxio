@@ -52,10 +52,6 @@ body {
   overflow: hidden;
   background: blue;
   margin: auto;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
 }
 .carousel.container {
   margin-right: 0;
@@ -98,6 +94,20 @@ body {
 }
 .carousel .tile span {
   color: white;
+}
+.carousel .tile > nav {
+  display: none;
+  position: absolute;
+  width: 140px;
+  top: 127px;
+  text-align: center;
+}
+.carousel .tile > nav button {
+  width: 130px;
+  margin-bottom: 5px;
+}
+.carousel .tile:hover > nav {
+  display: block;
 }
 .carousel .carousel-prev,
 .carousel .carousel-next {

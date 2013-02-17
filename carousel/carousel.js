@@ -27,11 +27,6 @@ directive('carousel', function() { return {
     var nxtBtn   = $(elem).find('.carousel-next');
     var prvBtn   = $(elem).find('.carousel-prev');
 
-    //XXX - for debugging positioning
-    var m1 = $('.m1');
-    var m2 = $('.m2');
-    var m3 = $('.m3');
-
     //measurements
     var tileWidth   = tiles.width();
     var tileOffset  = $('li.tile').last().outerWidth(true);
@@ -169,13 +164,13 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
     *
     */
 
-  var self = $scope;
+  var CarouselCtrl = $scope;
 
   var setNo = 1; //currently displayed result set
   
   //PUBLIC CONTROLLER METHODS
   
-  self.isMobile = function() {
+  CarouselCtrl.isMobile = function() {
      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
        return true;
      } else {
@@ -183,17 +178,61 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
      }
   };
 
-  self.getNextSet = function() {
+  CarouselCtrl.getNextSet = function() {
     setNo++;
   };
 
-  self.getPrevSet = function() {
+  CarouselCtrl.getPrevSet = function() {
     setNo--;
   };
 
-  self.getSetNo = function() {
+  CarouselCtrl.getSetNo = function() {
     return setNo;
   };
 
-  return self;
+  CarouselCtrl.loadElements = function(elementsArray) {
+    var li, img, nav, span, btn;
+
+    for(var i = 0; i < elementsArray.length; i++) {
+
+      li  = $('<li class="tile">');  //create new li tag
+      img = $('<img>'); //create new img tag
+
+      img.attr('src', elementsArray[i].image);
+
+      if(elementsArray[i].buttons.length > 0) {
+        nav = $('<nav>');
+        for(var j = 0; j < elementsArray[i].buttons.length; j++) {
+          button = $('<button></button>');
+          button.attr('id', elementsArray[i].buttons[j].label);
+          button.click(elementsArray[i].buttons[j].action);
+          button.appendTo(nav);
+        }
+      }
+      nav.appendTo(li);
+      img.appendTo(li);
+      li.appendTo($('.tiles'));
+    }
+  };
+
+  function generateTiles(amount) { //XXX
+    var tiles = [];
+
+    while(amount > 0) {
+      tiles.push({
+          id:      "tileID",
+          image:   "http://placehold.it/140x187",
+          buttons: [
+            { label: 'button 1', action: function(){ alert("clicked button 1"); }},
+            { label: 'button 2', action: function(){ alert("clicked button 2"); }}
+          ]
+        });
+    amount--;
+    }
+    return tiles;
+  }
+
+  CarouselCtrl.loadElements(generateTiles(60));
+
+  return CarouselCtrl;
 }]);
