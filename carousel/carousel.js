@@ -83,6 +83,7 @@ directive('carousel', function() { return {
 
     function slideTo(dir, callback) {
       var position = (dir === 'next') ? getNextPosition(): getPrevPosition();
+      console.log(position);
       $('.slide').animate({
         left: position
       }, 100, function() {
@@ -128,6 +129,7 @@ directive('carousel', function() { return {
     //slide calculations
 
     function getNumberVisible() {
+      console.log(carousel.width() / tileOffset);
       return Math.floor(carousel.width() / tileOffset);
     }
 
