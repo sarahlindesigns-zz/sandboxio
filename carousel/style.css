@@ -50,6 +50,7 @@ body {
   height: 187px;
   overflow: hidden;
   background: blue;
+  margin: auto;
 }
 .carousel.container {
   margin-right: 0;
@@ -62,10 +63,10 @@ body {
   display: block;
 }
 .carousel .slide {
+  position: relative;
   background: orange;
-  width: 200%;
+  width: 1000%;
   /*extend beyond page to the right*/
-
 }
 .carousel ul {
   margin: 0;
@@ -82,13 +83,12 @@ body {
   height: 187px;
   float: left;
   margin: 0;
-  margin-right: 35px;
-  margin-right: 10px;
+  margin-right: 28px;
   cursor: pointer;
   background: black;
 }
-.carousel .tile img {
-  display: none;
+.carousel .tile span {
+  color: white;
 }
 .carousel .carousel-prev,
 .carousel .carousel-next {
@@ -104,6 +104,7 @@ body {
   width: 93px;
   border-radius: 93px 0 0 93px;
   background: rgba(176, 60, 172, 0.75);
+  z-index: 999;
   /*ARROW ICON HERE*/
 
 }
@@ -117,6 +118,7 @@ body {
   width: 93px;
   border-radius: 0 93px 93px 0;
   background: rgba(176, 60, 172, 0.75);
+  z-index: 999;
   /*ARROW ICON HERE*/
 
 }

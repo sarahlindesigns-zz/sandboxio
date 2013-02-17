@@ -33,30 +33,17 @@ directive('carousel', function() { return {
     var m3 = $('.m3');
 
     //measurements
-    var carouselWidth    = carousel.width();
-    var tileWidth        = tiles.width();
-    var tileOffset       = $('li.tile').last().outerWidth(true);
-    var tileMargin       = tileOffset - tileWidth;
-    var elementsPerRow   = carouselWidth/tileOffset;
-    var elementsPerFirst = carouselWidth;
-    var resizeTimeout;
-  
-    //m2.css('left', cLeft);
-    //m3.css('left', pos);
+    var tileWidth   = tiles.width();
+    var tileOffset  = $('li.tile').last().outerWidth(true);
+    var tileMargin  = tileOffset - tileWidth;
 
     //flags
-    var showingFirstSet = true;
-    var adjusting = false;
+    var currentViewSet    = ctrl.getSetNo();
 
     self.addEventHandlers = function() {
   
       $(window).resize(function() {
-       /* if(resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function(){
-          refresh();
-          tiles.css('margin-right', naturalMargin);
-          adjustIndent();
-        }, 200);*/
+       
       });
 
       $(elem).mouseover(function() {
@@ -68,16 +55,23 @@ directive('carousel', function() { return {
       });
 
       prvBtn.click(function() {
-        if(ctrl.getPageNo())
-        ctrl.getPrev();
-        showingFirstSet = (ctrl.getPageNo() < 2);
-        showUI();
+        currentViewSet--;
+        slideTo('previous', function() {
+          showUI();
+          if(currentViewSet < 2) {
+            addIndent();
+          }
+        });
       });
 
       nxtBtn.click(function() {
-        ctrl.getNext();
-        showingFirstSet = (ctrl.getPageNo() < 2);
-        showUI();
+        slideTo('next', function(){
+          showUI();
+          currentViewSet++;
+          if(hasIndent()) {
+            removeIndent();
+          }
+        });
       });
     };
 
@@ -87,21 +81,26 @@ directive('carousel', function() { return {
       *
       */
 
-    //TODO: try to minimize this and refactor
-
-
+    function slideTo(dir, callback) {
+      var position = (dir === 'next') ? getNextPosition(): getPrevPosition();
+      $('.slide').animate({
+        left: position
+      }, 100, function() {
+        if(typeof callback === 'function') {
+          callback();
+        }
+      });
+    }
 
     function showUI() {
       if(!ctrl.isMobile()) {
-        if(showingFirstSet) {
-          carousel.addClass('container'); //throw into tbs layout
+        if(currentViewSet === 1) {
           carousel.removeClass('show-prev-ui');
           carousel.addClass('show-next-ui');
         } else {
-          carousel.removeClass('container'); //pull out of tbs container layout - full width
           carousel.addClass('show-prev-ui');
           carousel.addClass('show-next-ui');
-        }  
+        }
       }
     }
 
@@ -112,58 +111,46 @@ directive('carousel', function() { return {
       }
     }
 
-    function numberTilesToShow() {
-      var screenWidth  = $(window).width();
-      var marginOffset = naturalMargin;
+    //indentation for TBS
 
-      //return screenWidth / tileOffset;
+    function removeIndent() {
+      carousel.removeClass('container'); //pull out of tbs container layout - full width
     }
 
-    function adjust() {
-      
+    function addIndent() {
+      carousel.addClass('container'); //put into tbs layout for indent
     }
 
+    function hasIndent() {
+      return carousel.hasClass('container');
+    }
 
-    /*function adjustIndent() { //adjust left offset on first row of results
-      //calculate carousel display area width and get last visible tile
-      var carourselOffset = carousel.offset().left;
-      var indentWidth     = tiles.first().offset().left - carourselOffset;
-      var displayWidth    = carouselWidth - indentWidth; //remaining display room past indent
-      var tilesVisible    = Math.round(displayWidth / tileOffset);
-      var lastTileIx      = tilesVisible - 1;
-      var lastTile        = tiles[lastTileIx];
-      var marginPadding   = 0;
+    //slide calculations
 
-      //positioning vars
-      var lastTileOffset  = $(lastTile).width()/2;
-      var lastTileXCoord  = $(lastTile).offset().left;
-      console.log(lastTileXCoord);
-      var carouselEnd     = carouselWidth + carourselOffset;
+    function getNumberVisible() {
+      return Math.floor(carousel.width() / tileOffset);
+    }
 
-      m3.css('left', carouselEnd); //orange
+    function getViewWidth() {
+      return (getNumberVisible() * tileOffset);
+    }
 
-      if(!adjusting) {  
-        while((lastTileXCoord + lastTileOffset + marginPadding) < carouselEnd) {
-          var margin = Math.round((naturalMargin + marginPadding) / tilesVisible);
+    function getNextPosition() {
+      console.log('get next position');
+      return (isFirstSet()) ? getViewWidth() * -1: $('.slide').offset().left + (getViewWidth() * -1);
+    }
 
-          adjusting = true;
-          marginPadding++;
-          tiles.css('margin-right', margin);
-        }
-      }
-      adjusting = false;
-    }*/
+    function getPrevPosition() {
+      console.log('get previous position');
+      return (isFirstSet()) ? 0 : $('.slide').offset().left + getViewWidth();
+    }
 
-    function refresh() {
-      carouselWidth = carousel.width();
+    function isFirstSet() {
+      return currentViewSet === 1;
     }
 
     self.addEventHandlers();
 
-    var rightEdge = carousel.offset().left + carouselWidth;
-
-    //marker.css('left', rightEdge);
-    
   }
 };}).
 
@@ -177,7 +164,7 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
 
   var self = $scope;
 
-  var pageNo = 1; //current display results set
+  var setNo = 1; //currently displayed result set
   
   //PUBLIC CONTROLLER METHODS
   
@@ -187,18 +174,18 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
      } else {
        return false;
      }
-  }; 
-
-  self.getNext = function() {
-    pageNo++;
   };
 
-  self.getPrev = function() {
-    pageNo--;
+  self.getNextSet = function() {
+    setNo++;
   };
 
-  self.getPageNo = function() {
-    return pageNo;
+  self.getPrevSet = function() {
+    setNo--;
+  };
+
+  self.getSetNo = function() {
+    return setNo;
   };
 
   return self;

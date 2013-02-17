@@ -22,6 +22,8 @@ body {
 @tile-height: 0px + @tile-size;
 @tile-width: 0px + round(@tile-height*3/4);
 
+@tile-spacing: @tile-width/5;
+
 @rad: 93px;
 @indent: @tile-width;
 
@@ -60,9 +62,10 @@ body {
   height: @tile-height; 
   overflow:hidden;
   background: blue;
+  margin: auto;
 
-  //padding-left: 1em;
-  //padding-right: 1em;
+
+  //padding-left: @tile-spacing;
 
   &.container { //when inside TBS layout
     margin-right: 0; //override right margin for run-off
@@ -81,9 +84,9 @@ body {
   }
 
   .slide {
+    position: relative;
     background: orange;
-    width: 200%; /*extend beyond page to the right*/
-    
+    width: 1000%; /*extend beyond page to the right*/  
   }
   
   ul {
@@ -103,14 +106,15 @@ body {
     height: @tile-height;
     float: left;
     margin: 0;
-    margin-right: @tile-width/4;
-    margin-right: 10px;
+    margin-right: @tile-spacing;
     cursor: pointer;
     background: black;
   }
-
+  .tile span {
+    color: white;
+  }
   .tile img {
-    display: none;
+    //display: none;
   }
   
   .carousel-prev, .carousel-next {
@@ -123,7 +127,7 @@ body {
     right: -@rad/2; /*clip left*/
     .half-circle(@rad, 0);
     background: rgba(176, 60, 172, .75);
-  
+    z-index: 999;
     /*ARROW ICON HERE*/
   }
 
@@ -133,7 +137,7 @@ body {
     left: -@rad/2; /*clip right*/
     .half-circle(@rad, 1);
     background: rgba(176, 60, 172, .75);
-    
+    z-index: 999;
     /*ARROW ICON HERE*/
   }
   
