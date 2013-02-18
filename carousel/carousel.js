@@ -1,5 +1,3 @@
-angular.module('myApp', ['carousel']);
-
 angular.module('carousel', []).
 
 directive('carousel', function() { return {
@@ -12,6 +10,34 @@ directive('carousel', function() { return {
   templateUrl :   'Carousel.html',
 
   link: function postLink(scope, elem, attrs, ctrl) {
+
+    /*
+    $broadcast -- dispatches the event downwards to all child scopes,
+    $emit -- dispatches the event upwards through the scope hierarchy.
+    
+    */
+
+
+
+   /* scope.$watch(attrs.name + '.$dirty', function (newValue, oldValue) {
+                if (newValue != oldValue && newValue === true) {
+                    scope.$emit('formDirty', attrs.name);
+                } 
+            });
+            scope.$on('formClean', function () {
+                ctrl.$setPristine();             
+            });
+*/
+    scope.$emit('someEvent', 'test');
+
+    scope.tiles = [{
+      id: "tileID",
+      image:   "http://placehold.it/140x187",
+      buttons: [
+        { label: 'button 1', value: 'btnVal1'},
+        { label: 'button 2', value: 'btnVal2'}
+      ]
+    }];
 
     /**
       *
@@ -37,6 +63,10 @@ directive('carousel', function() { return {
     var currentViewSet    = ctrl.getSetNo();
 
     self.addEventHandlers = function() {
+
+      self.submit = function(event) {
+        console.log(event.target);
+      };
   
       $(window).resize(function() {
        
@@ -84,15 +114,6 @@ directive('carousel', function() { return {
       if(typeof callback === 'function') {
         callback();
       }
-      /*
-      $('.slide').animate({
-        left: position
-      }, slideSpeed, function() {
-        if(typeof callback === 'function') {
-          callback();
-        }
-      });
-      */
     }
 
     function showUI() {
@@ -156,7 +177,7 @@ directive('carousel', function() { return {
   }
 };}).
 
-controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
+controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $http) {
 
   /**
     *
@@ -190,7 +211,7 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
     return setNo;
   };
 
-  CarouselCtrl.loadElements = function(elementsArray) {
+  CarouselCtrl.addElements = function(elementsArray) {
     var li, img, nav, span, btn;
 
     for(var i = 0; i < elementsArray.length; i++) {
@@ -232,7 +253,7 @@ controller('CarouselCtrl', ['$scope', '$http', function($scope, $http) {
     return tiles;
   }
 
-  CarouselCtrl.loadElements(generateTiles(60));
+  //CarouselCtrl.addElements(generateTiles(60));
 
   return CarouselCtrl;
 }]);
