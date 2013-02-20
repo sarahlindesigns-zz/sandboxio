@@ -1,4 +1,4 @@
-angular.module('carousel', []).
+angular.module('carousels', []).
 
 directive('carousel', function() { return {
 
@@ -10,34 +10,6 @@ directive('carousel', function() { return {
   templateUrl :   'Carousel.html',
 
   link: function postLink(scope, elem, attrs, ctrl) {
-
-    /*
-    $broadcast -- dispatches the event downwards to all child scopes,
-    $emit -- dispatches the event upwards through the scope hierarchy.
-    
-    */
-
-
-
-   /* scope.$watch(attrs.name + '.$dirty', function (newValue, oldValue) {
-                if (newValue != oldValue && newValue === true) {
-                    scope.$emit('formDirty', attrs.name);
-                } 
-            });
-            scope.$on('formClean', function () {
-                ctrl.$setPristine();             
-            });
-*/
-    scope.$emit('someEvent', 'test');
-
-    scope.tiles = [{
-      id: "tileID",
-      image:   "http://placehold.it/140x187",
-      buttons: [
-        { label: 'button 1', value: 'btnVal1'},
-        { label: 'button 2', value: 'btnVal2'}
-      ]
-    }];
 
     /**
       *
@@ -64,13 +36,21 @@ directive('carousel', function() { return {
 
     self.addEventHandlers = function() {
 
-      self.submit = function(event) {
-        console.log(event.target);
+      /**
+      *   Carousel Event Emission
+      *
+      *   Carousels emit click events on their element which any parent
+      *   controller including the carousel directive can respond to
+      *
+      *   (Example) In the parent controller you would use this:
+      *
+      *   $scope.$on('carouselEvent', function (event, target) { console.log(target); });
+      *
+      */
+
+      self.submit = function(event) { //emit events upward to parent ctrl scope
+        scope.$emit('carouselEvent', event.target);
       };
-  
-      $(window).resize(function() {
-       
-      });
 
       $(elem).mouseover(function() {
         showUI();
@@ -114,6 +94,15 @@ directive('carousel', function() { return {
       if(typeof callback === 'function') {
         callback();
       }
+      /* //jQuery animation fallback
+      $('.slide').animate({
+        left: position
+      }, slideSpeed, function() {
+        if(typeof callback === 'function') {
+          callback();
+        }
+      });
+      */
     }
 
     function showUI() {
@@ -152,7 +141,6 @@ directive('carousel', function() { return {
     //slide calculations
 
     function getNumberVisible() {
-      console.log(carousel.width() / tileOffset);
       return Math.floor(carousel.width() / tileOffset);
     }
 
@@ -174,6 +162,7 @@ directive('carousel', function() { return {
 
     self.addEventHandlers();
 
+    scope.tiles = ctrl.generateMockElements(20);
   }
 };}).
 
@@ -181,7 +170,7 @@ controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $htt
 
   /**
     *
-    * UI Logic
+    * Carousel Controller
     *
     */
 
@@ -191,6 +180,7 @@ controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $htt
   
   //PUBLIC CONTROLLER METHODS
   
+  //move to utils?
   CarouselCtrl.isMobile = function() {
      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
        return true;
@@ -211,49 +201,33 @@ controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $htt
     return setNo;
   };
 
-  CarouselCtrl.addElements = function(elementsArray) {
-    var li, img, nav, span, btn;
-
-    for(var i = 0; i < elementsArray.length; i++) {
-
-      li  = $('<li class="tile">');  //create new li tag
-      img = $('<img>'); //create new img tag
-
-      img.attr('src', elementsArray[i].image);
-
-      if(elementsArray[i].buttons.length > 0) {
-        nav = $('<nav>');
-        for(var j = 0; j < elementsArray[i].buttons.length; j++) {
-          button = $('<button></button>');
-          button.attr('id', elementsArray[i].buttons[j].label);
-          button.click(elementsArray[i].buttons[j].action);
-          button.appendTo(nav);
-        }
-      }
-      nav.appendTo(li);
-      img.appendTo(li);
-      li.appendTo($('.tiles'));
-    }
-  };
-
-  function generateTiles(amount) { //XXX
+  CarouselCtrl.generateMockElements = function(amount) { //XXX
     var tiles = [];
+    var ix = 1;
 
-    while(amount > 0) {
+    while(ix < amount) {
       tiles.push({
-          id:      "tileID",
-          image:   "http://placehold.it/140x187",
+          id:      'tile_' + ix,
+          image:   'img/art' + ix + '.png',
           buttons: [
-            { label: 'button 1', action: function(){ alert("clicked button 1"); }},
-            { label: 'button 2', action: function(){ alert("clicked button 2"); }}
+            { label: 'button 1', value: 'button 1'},
+            { label: 'button 2', value: 'buttone 2'}
           ]
         });
-    amount--;
+      ix++;
     }
     return tiles;
-  }
+  };
 
-  //CarouselCtrl.addElements(generateTiles(60));
+  //strangely, ng-repeat kills css transitions for animating the carousel
+  //appending a single empty li onto the tiles ul makes it work again
+  CarouselCtrl.emptyElementHack = function() {
+    var li = $('<li class="tile">');  //create new li tag
+    li.css('visibility', 'hidden');
+    li.appendTo($('.tiles'));
+  };
+
+  CarouselCtrl.emptyElementHack();
 
   return CarouselCtrl;
 }]);
