@@ -36,18 +36,18 @@
       
       <div class="slide">
         
-        <ul class="tiles">
+        <ul class="items">
 
-          <li class="tile" ng-repeat="tile in tiles">
-            <span>{{tile.id}}</span>
+          <li class="item" ng-repeat="item in items">
+            <span>{{item.id}}</span>
             <nav>
             <button value="{{button.value}}"
-            ng-repeat="button in tile.buttons" 
-            ng-click="submit($event)">
+            ng-repeat="button in item.buttons" 
+            ng-click="click($event)">
             {{button.label}}
             </button>
             </nav>
-            <img ng-click="submit($event)" ng-src="{{tile.image}}">
+            <img ng-click="click($event)" ng-src="{{item.image}}">
           </li>
         </ul>
   
@@ -65,10 +65,14 @@
              
     </script>
 
-
     <div class="wrapper" ng-controller="MyCtrl">
-      <!-- ADD DIRECTIVE TO PAGE -->  
-      <carousel></carousel>
+
+      <!-- ADD DIRECTIVES TO PAGE -->  
+      <carousel id="dvr"></carousel>
+
+      <!-- ADD DIRECTIVES TO PAGE -->  
+      <!-- <carousel id="favorites" items="favorites-items"></carousel> -->
+
     </div>
 
   </body>

@@ -1,55 +1,71 @@
 angular.module('carousels', []).
 
+/**
+*
+* Carousel Directive
+*
+*/
+
 directive('carousel', function() { return {
 
   restrict    :   'E',
-  scope       :   true,
+  scope: {
+    localItems: '=items' //local carousel items list
+  },
   transclude  :   true,
   replace     :   false,
   controller  :   'CarouselCtrl',
   templateUrl :   'Carousel.html',
 
   link: function postLink(scope, elem, attrs, ctrl) {
-
-    /**
-      *
-      * UI Behavior
-      *
-      */
      
     var self = scope;
 
-    //elements
+    //directive elements
+    var id       = $(elem).attr('id');
     var carousel = $(elem).find('.carousel');
-    var tiles    = $(elem).find('.tile');
+    var slide    = $(elem).find('.slide');
+    var items    = $(elem).find('.item');
     var nxtBtn   = $(elem).find('.carousel-next');
     var prvBtn   = $(elem).find('.carousel-prev');
 
-    //measurements
-    var tileWidth   = tiles.width();
-    var tileOffset  = $('li.tile').last().outerWidth(true);
-    var tileMargin  = tileOffset - tileWidth;
-    var slideSpeed  = 500;
+    //carousel measurements
+    var winWidth    = $(window).width();
+    var itemWidth   = items.width();
+    var itemOffset  = items.last().outerWidth(true);
+    var itemMargin  = itemOffset - itemWidth;
+    var slidePos    = 0;
+    var currentSet  = 1;
 
-    //flags
-    var currentViewSet    = ctrl.getSetNo();
+    //var slideSpeed  = 200; //use for configuring jQuery Animation fallback
+
+    /**
+    *
+    * Carousel Event Handlers
+    *
+    */
 
     self.addEventHandlers = function() {
 
       /**
       *   Carousel Event Emission
       *
-      *   Carousels emit click events on their element which any parent
-      *   controller including the carousel directive can respond to
+      *   Carousels will emit click events on its clickable elements which any parent
+      *   controller (including the carousel directive itself) can respond to...
+      *   this produces a simple way to link actions and communicate across scopes
       *
-      *   (Example) In the parent controller you would use this:
+      *   (Example) In the parent controller you would use the $on as follows:
       *
       *   $scope.$on('carouselEvent', function (event, target) { console.log(target); });
       *
       */
 
-      self.submit = function(event) { //emit events upward to parent ctrl scope
-        scope.$emit('carouselEvent', event.target);
+      self.click = function(event) {
+        scope.$emit('carouselEvent', {eventName: 'click', eventTarget: event.target});
+      };
+
+      window.resize = function() {
+        winWidth = $(window).width();
       };
 
       $(elem).mouseover(function() {
@@ -61,44 +77,79 @@ directive('carousel', function() { return {
       });
 
       prvBtn.click(function() {
-        currentViewSet--;
+        currentSet--;
         slideTo('previous', function() {
           showUI();
-          if(currentViewSet < 2) {
+          if(isFirstSet()) {
             addIndent();
           }
         });
       });
 
       nxtBtn.click(function() {
-        slideTo('next', function(){
-          showUI();
-          currentViewSet++;
+        slideTo('next', function() {
+          currentSet++;
           if(hasIndent()) {
             removeIndent();
           }
+          showUI();
         });
+      });
+
+      self.$watch('localItems', function() {
+        //automatically loads items when associated property changes within the parent scope/ctrl
+        if(scope.localItems) {
+          updateItems();
+        }
       });
     };
 
     /**
-      *
-      * DOM Manipulation Helpers
-      *
-      */
+    *
+    * Public Directive Methods
+    *
+    */
+
+    self.load = function(elements) {
+      //TODO: ??? we may need to handle a manual loading method for edge cases
+    };
+
+    /**
+    *
+    * UI Behavior Functions
+    *
+    */
+
+    function init() {
+
+      self.addEventHandlers();
+
+      //scope.items = ctrl.generateMockElements(20); //XXX
+
+      //window.carousel = self;//XXX expose to window
+
+      scope.$emit('carouselEvent', {eventName: 'click', eventTarget: $(elem) });
+    }
+
+    function updateItems() {
+      //TODO load items
+    }
 
     function slideTo(dir, callback) {
-      var position = (dir === 'next') ? getNextPosition(): getPrevPosition();
+      var position = (dir === 'next') ? center(getNextPosition(),dir): center(getPrevPosition(),dir);
 
-      $('.slide').css('left', position); //uses pure css for animation
-      if(typeof callback === 'function') {
-        callback();
-      }
-      /* //jQuery animation fallback
+      slide.css('left', position); //uses pure css for animation
+
+      updatePostion(position);
+      if(typeof callback === 'function') { callback(); }
+
+      /*
+      //jQuery animation fallback
       $('.slide').animate({
         left: position
       }, slideSpeed, function() {
         if(typeof callback === 'function') {
+          updatePostion(position);
           callback();
         }
       });
@@ -107,9 +158,12 @@ directive('carousel', function() { return {
 
     function showUI() {
       if(!ctrl.isMobile()) {
-        if(currentViewSet === 1) {
+        if(isFirstSet()) {
           carousel.removeClass('show-prev-ui');
           carousel.addClass('show-next-ui');
+        } else if(isLastSet()) {
+          carousel.addClass('show-prev-ui');
+          carousel.removeClass('show-next-ui');
         } else {
           carousel.addClass('show-prev-ui');
           carousel.addClass('show-next-ui');
@@ -124,7 +178,7 @@ directive('carousel', function() { return {
       }
     }
 
-    //indentation for TBS
+    // "First Result Set" Indentation for TBS
 
     function removeIndent() {
       carousel.removeClass('container'); //pull out of tbs container layout - full width
@@ -138,45 +192,76 @@ directive('carousel', function() { return {
       return carousel.hasClass('container');
     }
 
-    //slide calculations
+    //Carousel slide behavior calculations
 
     function getNumberVisible() {
-      return Math.floor(carousel.width() / tileOffset);
+      return (isClippingLast()) ? Math.floor(carousel.width() / itemOffset): Math.floor((carousel.width() + itemWidth) / itemOffset);
+    }
+
+    function isClippingLast() {
+      return (isFirstSet()) ? (winWidth - getViewWidth() - getPosition()) < itemWidth:  (winWidth - getViewWidth()) < itemWidth;
+    }
+
+    function getViewWidthPadded() {
+      return carousel.width() / itemOffset;
     }
 
     function getViewWidth() {
-      return (getNumberVisible() * tileOffset);
+      return  Math.floor(carousel.width() / itemOffset) * itemOffset;
     }
 
     function getNextPosition() {
-      return (isFirstSet()) ? getViewWidth() * -1: $('.slide').offset().left + (getViewWidth() * -1);
+      return (isFirstSet()) ? getNumberVisible() * itemOffset * -1: getPosition() + (getNumberVisible() * itemOffset * -1);
     }
 
     function getPrevPosition() {
-      return (isFirstSet()) ? 0 : $('.slide').offset().left + getViewWidth();
+      return (isFirstSet()) ? 0 : getPosition() + getViewWidth();
+    }
+
+    function getPosition() {
+      return slidePos;
+    }
+
+    function updatePostion(position) {
+      slidePos = position;
+    }
+
+    function getTotalWidth() { //forces a recount, just like when bush got elected
+      return (items.parent().children().length - 1) * itemOffset;
+    }
+
+    function center(pos, dir) {
+      var adjust = (getNextSet(dir) === 1) ? 0: (winWidth - ((Math.floor(winWidth / itemOffset) * itemOffset) - itemMargin)) / 2;
+
+      return (dir === 'previous') ? pos - adjust: pos + adjust;
+    }
+
+    function getNextSet(dir) {
+      return (dir === 'previous') ? currentSet: currentSet + 1;
     }
 
     function isFirstSet() {
-      return currentViewSet === 1;
+      return currentSet === 1;
     }
 
-    self.addEventHandlers();
+    function isLastSet() {
+      return (Math.abs(getPosition()) + (winWidth)) > getTotalWidth();
+    }
 
-    scope.tiles = ctrl.generateMockElements(20);
+    init();
+    
   }
 };}).
 
 controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $http) {
 
   /**
-    *
-    * Carousel Controller
-    *
-    */
+  *
+  * Carousel Controller
+  *
+  */
 
   var CarouselCtrl = $scope;
-
-  var setNo = 1; //currently displayed result set
   
   //PUBLIC CONTROLLER METHODS
   
@@ -189,25 +274,13 @@ controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $htt
      }
   };
 
-  CarouselCtrl.getNextSet = function() {
-    setNo++;
-  };
-
-  CarouselCtrl.getPrevSet = function() {
-    setNo--;
-  };
-
-  CarouselCtrl.getSetNo = function() {
-    return setNo;
-  };
-
   CarouselCtrl.generateMockElements = function(amount) { //XXX
-    var tiles = [];
+    var items = [];
     var ix = 1;
 
     while(ix < amount) {
-      tiles.push({
-          id:      'tile_' + ix,
+      items.push({
+          id:      'item_' + ix,
           image:   'img/art' + ix + '.png',
           buttons: [
             { label: 'button 1', value: 'button 1'},
@@ -216,15 +289,15 @@ controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $htt
         });
       ix++;
     }
-    return tiles;
+    return items;
   };
 
   //strangely, ng-repeat kills css transitions for animating the carousel
-  //appending a single empty li onto the tiles ul makes it work again
+  //appending a single empty li onto the items ul makes it work again
   CarouselCtrl.emptyElementHack = function() {
-    var li = $('<li class="tile">');  //create new li tag
+    var li = $('<li class="item">');  //create new li tag
     li.css('visibility', 'hidden');
-    li.appendTo($('.tiles'));
+    li.appendTo($('.items'));
   };
 
   CarouselCtrl.emptyElementHack();

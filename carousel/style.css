@@ -52,7 +52,7 @@ body {
   margin: 0;
   padding: 0;
 }
-.carousel .tiles > .tile {
+.carousel .items > .item {
   width: 140px;
   height: 187px;
   float: left;
@@ -61,21 +61,21 @@ body {
   cursor: pointer;
   background: black;
 }
-.carousel .tile span {
+.carousel .item span {
   color: white;
 }
-.carousel .tile > nav {
+.carousel .item > nav {
   display: none;
   position: absolute;
   width: 140px;
   top: 127px;
   text-align: center;
 }
-.carousel .tile > nav button {
+.carousel .item > nav button {
   width: 130px;
   margin-bottom: 5px;
 }
-.carousel .tile:hover > nav {
+.carousel .item:hover > nav {
   display: block;
 }
 .carousel .carousel-prev,
