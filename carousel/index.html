@@ -40,14 +40,14 @@
 
           <li class="item" ng-repeat="item in items">
             <span>{{item.id}}</span>
-            <nav>
+            <nav ng-show="item.buttons">
             <button value="{{button.value}}"
             ng-repeat="button in item.buttons" 
             ng-click="click($event)">
             {{button.label}}
             </button>
             </nav>
-            <img ng-click="click($event)" ng-src="{{item.image}}">
+            <img ng-click="click($event)" ng-src="{{item.art}}">
           </li>
         </ul>
   
@@ -68,7 +68,7 @@
     <div class="wrapper" ng-controller="MyCtrl">
 
       <!-- ADD DIRECTIVES TO PAGE -->  
-      <carousel id="dvr"></carousel>
+      <carousel id="dvr" items="dvrItems"></carousel>
 
       <!-- ADD DIRECTIVES TO PAGE -->  
       <!-- <carousel id="favorites" items="favorites-items"></carousel> -->

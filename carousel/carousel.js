@@ -21,7 +21,7 @@ directive('carousel', function() { return {
      
     var self = scope;
 
-    //directive elements
+    //elements
     var id       = $(elem).attr('id');
     var carousel = $(elem).find('.carousel');
     var slide    = $(elem).find('.slide');
@@ -29,13 +29,13 @@ directive('carousel', function() { return {
     var nxtBtn   = $(elem).find('.carousel-next');
     var prvBtn   = $(elem).find('.carousel-prev');
 
-    //carousel measurements
-    var winWidth    = $(window).width();
-    var itemWidth   = items.width();
-    var itemOffset  = items.last().outerWidth(true);
-    var itemMargin  = itemOffset - itemWidth;
-    var slidePos    = 0;
-    var currentSet  = 1;
+    //measurements
+    var winWidth   = $(window).width();
+    var itemWidth  = items.width();
+    var itemOffset = items.last().outerWidth(true);
+    var itemMargin = itemOffset - itemWidth;
+    var slidePos   = 0;
+    var currentSet = 1;
 
     //var slideSpeed  = 200; //use for configuring jQuery Animation fallback
 
@@ -110,8 +110,8 @@ directive('carousel', function() { return {
     *
     */
 
-    self.load = function(elements) {
-      //TODO: ??? we may need to handle a manual loading method for edge cases
+    self.load = function(items) {
+      //TODO: Handle manual loading for edge cases
     };
 
     /**
@@ -121,6 +121,9 @@ directive('carousel', function() { return {
     */
 
     function init() {
+
+      self.foo = false;
+
 
       self.addEventHandlers();
 
@@ -133,6 +136,7 @@ directive('carousel', function() { return {
 
     function updateItems() {
       //TODO load items
+      self.items = self.localItems;
     }
 
     function slideTo(dir, callback) {
@@ -249,8 +253,8 @@ directive('carousel', function() { return {
     }
 
     init();
-    
   }
+
 };}).
 
 controller('CarouselCtrl', ['$scope', '$compile', '$http', function($scope, $http) {
