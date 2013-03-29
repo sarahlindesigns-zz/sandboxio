@@ -41,11 +41,21 @@ directive('carousel', function() { return {
 
     /**
     *
+    * Public Directive Methods
+    *
+    */
+
+    self.load = function(items) {
+      //TODO: Handle manual loading for edge cases
+    };
+
+    /**
+    *
     * Carousel Event Handlers
     *
     */
 
-    self.addEventHandlers = function() {
+    var addEventHandlers = function() {
 
       /**
       *   Carousel Event Emission
@@ -106,16 +116,6 @@ directive('carousel', function() { return {
 
     /**
     *
-    * Public Directive Methods
-    *
-    */
-
-    self.load = function(items) {
-      //TODO: Handle manual loading for edge cases
-    };
-
-    /**
-    *
     * UI Behavior Functions
     *
     */
@@ -124,8 +124,7 @@ directive('carousel', function() { return {
 
       self.foo = false;
 
-
-      self.addEventHandlers();
+      addEventHandlers();
 
       //scope.items = ctrl.generateMockElements(20); //XXX
 
