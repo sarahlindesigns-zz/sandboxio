@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML-5: Audio Tag</title>
+  </head>
+
+<body>
+
+  <h2>HTML5 Audio Tag</h2>
+  <hr>
+
+  <div>
+    <p><em>Audio Tag Specific</em></p>
+    <input type="checkbox" name="controls" value="controls" checked>Show Controls<br>
+    <input type="checkbox" name="loop" value="loop">Enable Looping<br>
+  </div>
+
+  <p>Example Audio Tag Result</p>
+
+  <audio controls>
+    <source src="audio-assets/fishin.ogg" type="audio/ogg">
+    <source src="audio-asset/fishin.mp3"  type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <hr>
+  <div class="info">
+    <h3>Audio Tag Atrribute Options</h3>
+    <p><em>Audio Tag Specific</em>
+    <p><strong>autoplay</strong> - if this attribute is included, the audio will begin to play once it is ready</p>
+    <p><strong>controls</strong> - if this one is included, controls for the audio file will be included on the page (which is a great idea--it is very annoying to not have a way to stop the audio from playing)</p>
+    <p><strong>loop</strong> - if this one is included, the audio will loop and play again once it has finished</p>
+    <p><strong>preload</strong> - this one has three parameters: auto, which plays once it has loaded, metadata, which only displays the data associated with the audio file, and none, which means it will not preload</p>
+    <p><strong>src</strong> - this one's value is simply the URL of the audio file you wish to play</p>
+    <p><em>Other Supported Tag Attributes</em>
+    <p><strong>accesskey</strong> - this specifies a keyboard shortcut for a given element</p>
+    <p><strong>class</strong> - this specifies a classname for a given element, to be used in conjunction with a style sheet</p>
+    <p><strong>contenteditable</strong> - specifies whether a user is allowed to edit the content</p>
+    <p><strong>contextmenu</strong> - specifies the context menu for a given element</p>
+    <p><strong>dir</strong> - specifies the direction of the text for content in a given element</p>
+    <p><strong>draggable</strong> - specifies if a user is allowed to drag a given element</p>
+    <p><strong>dropzone</strong> - specifies the event that occurs when an item or data is dragged and dropped into a given element</p>
+    <p><strong>hidden</strong> - specifies if a given element is hidden or not</p>
+    <p><strong>id</strong> - specifies a unique identification for a given element</p>
+    <p><strong>lang</strong> - specifies a language code for the content in a given element</p>
+    <p><strong>spellcheck</strong> - specifies if a specific element will need to be subjected to a spelling and grammar check</p>
+    <p><strong>style</strong> - defines an inline style for a specific element</p>
+    <p><strong>tabindex</strong> - specifies the tab order of a specific element</p>
+
+    
+
+  </div>
+
+
+<script src="../../js/vendor/jquery.js"></script>
+<script>
+var loop = false;
+var autoplay = false;
+var controls = false;
+
+$('input').click(function() {
+
+  if(this.value == 'controls') {
+    if(this.checked) {
+      $('audio').attr('controls', true);
+    } else {
+      $('audio').attr('controls', false);
+    }
+  } else if(this.value === 'loop') {
+    if(this.checked) {
+      $('audio').attr('loop', true);
+    } else {
+      $('audio').attr('loop', false);
+    }
+  }
+});
+
+
+// $(function() {
+//      $(".playback").click(function(e) {
+//        e.preventDefault();
+
+//        // This next line will get the audio element
+//        // that is adjacent to the link that was clicked.
+//        var song = $(this).next('audio').get(0);
+//        if (song.paused)
+//          song.play();
+//        else
+//          song.pause();
+//      });
+//    });
+
+</script>
+</body>
+</html>
