@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Keyboard Event Mapping</title>
+    <style>
+      body {
+        margin: 20px;
+        background: white;
+      }
+    </style>
+  </head>
+<body>
+
+<div class="key-out"></div>
+
+<canvas id="stage"></canvas>
+
+<!-- keymaster library for mapping keys, has no dependencies -->
+<script src="../../js/vendor/keymaster.min.js"></script>
+
+<script src="../../js/vendor/jquery.js"></script>
+
+<script>
+var MM = {};
+
+(function(root){
+
+  var keyOut = $('.key-out');
+
+  //A-Z
+
+  key('a',       function(){  printKey('a'); });
+  key('shift+a', function(){  printKey('A'); });
+
+  key('b',       function(){  printKey('b'); });
+  key('shift+b', function(){  printKey('B'); });
+
+  key('b',       function(){  printKey('b'); });
+  key('shift+b', function(){  printKey('B'); });
+
+  key('c',       function(){  printKey('c'); });
+  key('shift+c', function(){  printKey('C'); });
+
+  key('d',       function(){  printKey('d'); });
+  key('shift+d', function(){  printKey('D'); });
+
+  key('e',       function(){  printKey('e'); });
+  key('shift+e', function(){  printKey('E'); });
+
+  key('f',       function(){  printKey('f'); });
+  key('shift+f', function(){  printKey('F'); });
+
+  key('g',       function(){  printKey('g'); });
+  key('shift+g', function(){  printKey('G'); });
+
+  key('h',       function(){  printKey('h'); });
+  key('shift+h', function(){  printKey('H'); });
+
+  key('i',       function(){  printKey('i'); });
+  key('shift+i', function(){  printKey('I'); });
+
+  key('j',       function(){  printKey('j'); });
+  key('shift+j', function(){  printKey('J'); });
+
+  key('k',       function(){  printKey('k'); });
+  key('shift+k', function(){  printKey('K'); });
+
+  key('l',       function(){  printKey('l'); });
+  key('shift+l', function(){  printKey('L'); });
+
+  key('m',       function(){  printKey('m'); });
+  key('shift+m', function(){  printKey('M'); });
+
+  key('n',       function(){  printKey('n'); });
+  key('shift+n', function(){  printKey('N'); });
+
+  key('o',       function(){  printKey('o'); });
+  key('shift+o', function(){  printKey('O'); });
+
+  key('p',       function(){  printKey('p'); });
+  key('shift+p', function(){  printKey('P'); });
+
+  key('q',       function(){  printKey('q'); });
+  key('shift+q', function(){  printKey('Q'); });
+  
+  key('r',       function(){  printKey('r'); });
+  key('shift+r', function(){  printKey('R'); });
+  
+  key('s',       function(){  printKey('s'); });
+  key('shift+s', function(){  printKey('S'); });
+
+  key('t',       function(){  printKey('t'); });
+  key('shift+t', function(){  printKey('T'); });
+
+  key('u',       function(){  printKey('u'); });
+  key('shift+u', function(){  printKey('U'); });
+
+  key('v',       function(){  printKey('v'); });
+  key('shift+v', function(){  printKey('V'); });
+
+  key('w',       function(){  printKey('w'); });
+  key('shift+w', function(){  printKey('W'); });
+
+  key('x',       function(){  printKey('x'); });
+  key('shift+x', function(){  printKey('X'); });
+
+  key('y',       function(){  printKey('y'); });
+  key('shift+y', function(){  printKey('Y'); });
+
+  key('z',       function(){  printKey('z'); });
+  key('shift+z', function(){  printKey('Z'); });
+
+  //0-9
+
+  key('0', function(){  printKey('0'); });
+  key('1', function(){  printKey('1'); });
+  key('2', function(){  printKey('2'); });
+  key('3', function(){  printKey('3'); });
+  key('4', function(){  printKey('4'); });
+  key('5', function(){  printKey('5'); });
+  key('6', function(){  printKey('6'); });
+  key('7', function(){  printKey('7'); });
+  key('8', function(){  printKey('8'); });
+  key('9', function(){  printKey('9'); });
+
+  key('space', function(){  printKey(' '); });
+
+
+  function printKey(key) {
+    var text = (key) ? keyOut.text() + key: keyOut.html().substring(0, keyOut.html().length-1);
+    keyOut.html(text);
+  }
+
+  // Prevent the backspace/delete key from navigating back in browser
+  $(document).unbind('keydown').bind('keydown', function (event) {
+    var doPrevent = false;
+    if (event.keyCode === 8) {
+      
+      printKey(); //if we call printKey with no argument, it will delete
+
+      var d = event.srcElement || event.target;
+      if ((d.tagName.toUpperCase() === 'INPUT' && 
+          (d.type.toUpperCase() === 'TEXT' || 
+           d.type.toUpperCase() === 'PASSWORD')) || 
+           d.tagName.toUpperCase() === 'TEXTAREA') {
+           doPrevent = d.readOnly || d.disabled;
+      }
+      else {
+        doPrevent = true;
+      }
+    }
+    if (doPrevent) {
+      event.preventDefault();
+    }
+  });
+
+})(MM); 
+
+</script>
+
+
+</body>
+</html>
