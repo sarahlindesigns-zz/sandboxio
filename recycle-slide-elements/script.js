@@ -30,6 +30,9 @@ $(document).ready(function() {
   var pixelSlideAmount;
   var totalSets;
 
+  //TODO: create a custom carousel element in memory in the beginning of the script, 
+  //      and then just clone it to produce the necessary amount for carousel's physical size
+
   /*
    *  Initialize the carousel
    */
@@ -67,6 +70,8 @@ $(document).ready(function() {
     $('.output').html(currentSet + ' of ' + totalSets); //XXX: print out the set info
 
     slide.css('margin-left', -pixelSlideAmount*2); //set the intial slide position
+
+    //updateCarouselData();
   }
 
   function goSlide(dir) {//slide the carousel by direction
@@ -97,6 +102,9 @@ $(document).ready(function() {
           range.insertBefore(items.first());
         }
 
+        //we also need to update the items array after the insertion
+        items = $('.item');
+
         //since we altered the dom, we need to update the slide position by adjusting the left margin
         slide.css('margin-left', -pixelSlideAmount*2);
 
@@ -105,22 +113,22 @@ $(document).ready(function() {
 
         //print and log the results for development
         $('.output').html(currentSet + ' of ' + totalSets);
-        console.log("first in view => " + firstInViewIx);
 
         //finally, we update the displayed data within our item elements
-        updateCarouselData();
+        //updateCarouselData(dir);
 
       });
     }
   }
 
-  function updateCarouselData() {
-
-  }
-
-  function showRange() {
-  
-    console.log(getDataRange(currentSet));
+  function updateCarouselData(dir) {
+    if(typeof(dir) !== 'undefined') {
+      console.log(dir);
+    } else {
+      for(var j = 0; j < items.length; j++) {
+        $(items[j + firstInViewIx]).find('img').attr('src', results[j]);
+      }
+    }
   }
 
   function getDataRange(set) {
@@ -148,6 +156,5 @@ $(document).ready(function() {
   });
 
   self.init();
-  showRange();
 
 });
