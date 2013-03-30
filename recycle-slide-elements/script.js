@@ -1,90 +1,135 @@
 $(document).ready(function() {
 
-  console.log("loaded");
+  //elements
 
-  var slide = $('.slide');
-  var prev  = $('button:contains("PREV")');
-  var next  = $('button:contains("NEXT")');
+  var carousel = $('#carousel'); //container element dictates all the sizing characteristic
+  var slide    = carousel.find('.slide');
+  var items;
+
+  var prev  = $('button:contains("PREV")'); //XXX: temp controls
+  var next  = $('button:contains("NEXT")'); //XXX: temp controls
+
+  //configuration
 
   var spacing   = 20;
   var itemWidth = 140;
   
-  var multiple  = 5; // <- *offscreen* *offscreen* [ *visible* ] *offscreen* *offscreen* ->
+  /*  [][][], [][][] <-Offleft | [inview] [inview] [inview]  | Offright-> [][][], [][][]  */
 
-  var results = new Array(10);
+  var multiple  = 5; 
 
-  var img_path = '../img/';
-
-  var container = $('#carousel');
+  var results = new Array(10); //XXX: for testing
+  var img_path = '../img/';   //XXX: for testing
 
   var currentSet = 1;
+  var itemViewWidth;
+  var totalNoElements;
+  var noItemsInView;
+  var firstInViewIxl;
+  var totalItemsInRange;
+  var pixelSlideAmount;
+  var totalSets;
 
-  var noItemsInView = Math.floor(container.width()/(itemWidth+spacing));
-  var itemViewWidth = noItemsInView*(itemWidth+spacing)-spacing;
-  var numberOfItems = noItemsInView * multiple;
+  /*
+   *  Initialize the carousel
+   */
 
-  var firstInViewIx = noItemsInView*2;
+  self.init = function () {
 
-  //generate total amount of elements up-front, based on screen real estate
-  for(var i = 0; i < numberOfItems; i++) {
-    slide.append('<li id="'+i+'" class="item" style="margin-right:'+spacing+'px"><img src=""></li>');
+    //how many items fit into the view?
+    noItemsInView = Math.floor(carousel.width() / (itemWidth+spacing));
+
+    //see if we can squeeze one more, by subtracting the last right-margin and recalculating
+    if( (noItemsInView * (itemWidth + spacing)) + itemWidth < carousel.width() ) {
+      itemsWidth += itemWidth;
+      noItemsInView++;
+    }
+
+    console.log('items in view => ' + noItemsInView);
+
+    itemViewWidth = noItemsInView*(itemWidth+spacing)-spacing;
+    totalNoElements = noItemsInView * multiple;
+
+    firstInViewIx = noItemsInView*2;
+
+    //generate total amount of elements up-front, based on screen real estate
+    for(var i = 0; i < totalNoElements; i++) {
+      slide.append('<li id="'+i+'" class="item" style="margin-right:'+spacing+'px"><img src=""></li>');
+    }
+
+    items = $('.item');
+
+    totalItemsInRange = items.length;
+    pixelSlideAmount  = items.outerWidth(true)*noItemsInView;
+
+    totalSets = Math.ceil(results.length / noItemsInView);
+
+    $('.output').html(currentSet + ' of ' + totalSets); //XXX: print out the set info
+
+    slide.css('margin-left', -pixelSlideAmount*2); //set the intial slide position
   }
 
-  var items = $('.item');
+  function goSlide(dir) {//slide the carousel by direction
 
-  var totalItemsInRange = items.length;
-  var pixelSlideAmount  = items.outerWidth(true)*noItemsInView;
+    var nextSet = (dir) ? currentSet+1: currentSet-1; //indicate the new pagination set
 
-  var totalSets = Math.ceil(results.length / noItemsInView);
+    if(nextSet > 0 && nextSet <= totalSets) { //see if the new set would be within range
 
-  $('.output').html(currentSet + ' of ' + totalSets);
+      slide.animate({ //animate the slide element, which moves our list items
 
-  slide.css('margin-left', -pixelSlideAmount*2);
-
-  function goSlide(dir) {
-    var nextSet = (dir) ? currentSet+1: currentSet-1;
-    if(nextSet > 0 && nextSet <= totalSets) {
-      slide.animate({
         'margin-left': (dir) ? '-=' + pixelSlideAmount: '+=' + pixelSlideAmount
-      }, 500, 'linear', function() {
+
+      }, 500, 'linear', function() { //when complete, update the dom/data, and make any necessary adjustments
+
+        //get range of elements to chop off and move
         var range = (dir) ? items.slice(0, noItemsInView): items.slice(items.length-noItemsInView, items.length);
+        
+        //remove the selected range from the dom
         range.remove();
+
+        //update the items array after the removal
         items = $('.item');
-          if(dir) {
-            range.insertAfter(items.last());
-          } else {
-            range.insertBefore(items.first());
-          }
-          slide.css('margin-left', -pixelSlideAmount*2);
-          currentSet = nextSet;
 
-          $('.output').html(currentSet + ' of ' + totalSets);
+        //now append the chopped off items either before or after items array, depeding our direction
+        if(dir) {
+          range.insertAfter(items.last());
+        } else {
+          range.insertBefore(items.first());
+        }
 
+        //since we altered the dom, we need to update the slide position by adjusting the left margin
+        slide.css('margin-left', -pixelSlideAmount*2);
 
-          console.log("first in view => " + firstInViewIx);
+        //now we update our global pagination set
+        currentSet = nextSet;
+
+        //print and log the results for development
+        $('.output').html(currentSet + ' of ' + totalSets);
+        console.log("first in view => " + firstInViewIx);
+
+        //finally, we update the displayed data within our item elements
+        updateCarouselData();
+
       });
     }
   }
 
-  function showRange() {
-    var rangeStart = currentSet-1,
-        rangeEnd   = rangeStart + noItemsInView-1;
+  function updateCarouselData() {
 
-        console.log(rangeStart);
-        console.log(rangeEnd);
-
-    // $.each(items, function(ix, item) {
-    //   if(ix >= totalItemsInRange || ix > results.length) {
-    //     console.log(ix);
-    //     return;
-    //   } else {
-    //     $(item).find('img').attr('src', results[ix]);
-    //   }
-    // });
   }
 
-  function getDataRange() {
-    //totalItemsInRange*currentSet
+  function showRange() {
+  
+    console.log(getDataRange(currentSet));
+  }
+
+  function getDataRange(set) {
+    var startIx = set - 1,
+        endIx   = startIx + noItemsInView-1;
+    return {
+      start: startIx,
+      end  : endIx
+    };
   }
 
   //Controls
@@ -102,6 +147,7 @@ $(document).ready(function() {
     results[ix] = path;
   });
 
+  self.init();
   showRange();
 
 });
