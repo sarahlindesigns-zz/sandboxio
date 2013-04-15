@@ -57,7 +57,7 @@ $(document).ready(function() {
 
       here is a crude representation:
 
-      <- [][][], [][][] | [inview] [inview] [inview] | [][][], [][][] ->
+      <- [][][], [][][] | [visible] [visible] [visible] | [][][], [][][] ->
 
       note: while there are 5 sets of groups, only 1 is visible at a time
             the additional 2 sets on each end account for an innevitable 
