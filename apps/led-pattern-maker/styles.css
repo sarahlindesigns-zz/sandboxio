@@ -1,0 +1,35 @@
+body {
+    background: white;
+  }
+
+.wrapper {
+  width: 832px;
+  margin: auto;
+}
+
+.pixel {
+  width: 100px;
+  height: 100px;
+  background: blue;
+  margin:2px;
+  float: left;
+}
+
+.sensor {
+  position: absolute;
+  left: 10px;
+  width: 57px;
+  height: 426px;
+  background: url(measure.png);
+  cursor: pointer;
+}
+
+form {
+  font-family: Arial;
+  font-size: 14px;
+}
+
+fieldset {
+  width: 150px;
+}
+
