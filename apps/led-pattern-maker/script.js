@@ -7,11 +7,13 @@
   var pixels         = new Array(pixelCount); //create new array with 48 positions
   var colors         = new Array(pixelCount);
   var numberRows     = 6;
-  var numberColumns  = 8;
+  var totalColumns   = 8;
+  var lastColumn     = 0;
   var animating;      //will be used to hold an interval reference (i.e. animation function)
   var loopSpeed      = 500; //in milliseconds (speed of main loop)
   var sensorReading  = 0;
   var selectedEffect = $('input:checked').val();
+
 
   $.each(pixels, function(i) {
     pixels[i] = $('<div class="pixel"></div>'); //create the pixel elements
@@ -33,17 +35,15 @@
 
     if(sensorReading > 0) { //if someone if front of sensor
 
-      if(!animating) { //if we're not already in the middle of animating something
-        //check to see which effect type we're using
-        switch(selectedEffect) {
-          case 'sparkles':
-            sparkle(sensorReading);
-            break;
-          case 'sweep':
-            sweep(sensorReading);
-            break;
-        }
+      switch(selectedEffect) {//choose animation based on selected effect
+        case 'sparkles':
+          sparkle(sensorReading);
+          break;
+        case 'sweep':
+          sweep(sensorReading);
+          break;
       }
+
     } else {
       if(animating) {
         stopAnimating();
@@ -81,7 +81,6 @@
 
   $('.sensor').mouseleave(function(evt) {
     sensorReading = 0; //simulates no person standing in front of sensor
-    //console.log("out of sensor view");
   });
 
   /* Animation Effects Functions
@@ -101,23 +100,20 @@
   }
 
   function sweep(speed, column) {
-    var i = (column) ? column: 0;
+    if(animating) {
+      stopAnimating();
+    }
 
-    animating = setTimeout(function() {
-      hide();
-      for(j = i; j < colors.length; j+=numberColumns) {
-        colors[j] = 'rgb(255,0,0)';
-      }
-      show();
-      i++;
-      if(i <= numberColumns) {
-        sweep(speed, i);
-      } else {
+    animating = setInterval(function() {
         hide();
-        if(animating) {
-          stopAnimating();
+        for(j = lastColumn; j < colors.length; j+=totalColumns) {
+          colors[j] = 'rgb(255,0,0)';
         }
-      }
+        show();
+        lastColumn++;
+        if(lastColumn >= totalColumns) {
+          lastColumn = 0;
+        }
     }, speed);
   }
 
