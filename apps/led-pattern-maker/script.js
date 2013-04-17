@@ -3,23 +3,17 @@
   /* Setup
     ---------------------------------------------- */
 
-  var pixelCount = 48;
-
-  var pixels = new Array(pixelCount); //create new array with 48 positions
-  var colors = new Array(pixelCount);
-
-  var numberRows = 6;
-  var numberColumns = 8;
-
-  var animating = null; //will be used to hold an interval reference (i.e. animation function)
-  
-  var loopSpeed = 500; //in milliseconds (speed of main loop)
-
-  var sensorReading = 0;
-
+  var pixelCount     = 48;
+  var pixels         = new Array(pixelCount); //create new array with 48 positions
+  var colors         = new Array(pixelCount);
+  var numberRows     = 6;
+  var numberColumns  = 8;
+  var animating;      //will be used to hold an interval reference (i.e. animation function)
+  var loopSpeed      = 500; //in milliseconds (speed of main loop)
+  var sensorReading  = 0;
   var selectedEffect = $('input:checked').val();
 
-  $.each(pixels, function(i) { 
+  $.each(pixels, function(i) {
     pixels[i] = $('<div class="pixel"></div>'); //create the pixel elements
     pixels[i].appendTo('.wrapper'); //add them to the screen
   });
@@ -36,26 +30,43 @@
     ---------------------------------------------- */
 
   var loop = setInterval(function() { //simulate the arduino loop (always going!!)
- 
+
     if(sensorReading > 0) { //if someone if front of sensor
 
-      sparkle(sensorReading);
-
+      if(!animating) { //if we're not already in the middle of animating something
+        //check to see which effect type we're using
+        switch(selectedEffect) {
+          case 'sparkles':
+            sparkle(sensorReading);
+            break;
+          case 'sweep':
+            sweep(sensorReading);
+            break;
+        }
+      }
     } else {
       if(animating) {
-        clearInterval(animating);
+        stopAnimating();
+        hide();
       }
     }
 
   }, loopSpeed);
 
-  /* Main Show Function
+  /* Show and Hide Off Functions
     ---------------------------------------------- */
 
   function show() { //call show after updating colors
     $.each(colors, function(i) {
       pixels[i].css('background', colors[i]);
     });
+  }
+
+  function hide() { //turn off all pixels
+    $.each(colors, function(ix) {
+      colors[ix] = 'rgb(0,0,0)';
+    });
+    show();
   }
 
   /* Sensor Functions (Simulating Distance)
@@ -78,9 +89,8 @@
 
   function sparkle(speed) {
 
-    if(animating !== null) {
-      clearInterval(animating);
-      animating = null;
+    if(animating) {
+      stopAnimating();
     }
 
     animating = setInterval(function() {
@@ -90,32 +100,26 @@
 
   }
 
-  function sweep(color) {
+  function sweep(speed, column) {
+    var i = (column) ? column: 0;
 
-    var i = 0;
-
-    //sweep forward
-
-    // while(i < numberColumns) {
-    //   console.log(i);
-    //   $.each(colors, function(ix) {
-    //     console.log(numberColumns
-    //   });
-    //   i++;
-    // }
-
-    // //then sweep back
-
-    // while(i--) {
-    //   console.log(i);
-    //   $.each(colors, function(ix) {
-
-    //   });
-    // }
+    animating = setTimeout(function() {
+      hide();
+      for(j = i; j < colors.length; j+=numberColumns) {
+        colors[j] = 'rgb(255,0,0)';
+      }
+      show();
+      i++;
+      if(i <= numberColumns) {
+        sweep(speed, i);
+      } else {
+        hide();
+        if(animating) {
+          stopAnimating();
+        }
+      }
+    }, speed);
   }
-
-  sweep('red');
-
 
   /* Color Setup Functions
     ---------------------------------------------- */
@@ -128,6 +132,11 @@
 
   /* Helper Functions (Utility Stuff)
     ---------------------------------------------- */
+
+  function stopAnimating() {
+    clearInterval(animating);
+    animating = null;
+  }
 
   function getRandomNumber() {
     var randomNumber = Math.floor(Math.random()*256); //get rand no in range of 0-255

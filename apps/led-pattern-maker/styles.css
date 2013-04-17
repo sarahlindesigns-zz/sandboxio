@@ -10,7 +10,7 @@ body {
 .pixel {
   width: 100px;
   height: 100px;
-  background: blue;
+  background: rgb(0,0,0);
   margin:2px;
   float: left;
 }
